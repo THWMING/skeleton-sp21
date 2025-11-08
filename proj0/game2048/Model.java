@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author Ming
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -138,6 +138,13 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i++) {
+            for (int j = 0; j < b.size(); j++) {
+                if (b.tile(i, j) == null){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -148,6 +155,16 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i++) {
+            for (int j = 0; j < b.size(); j++) {
+                if (b.tile(i, j) == null) {
+                    continue;
+                }
+                if (b.tile(i, j).value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -159,8 +176,31 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
-        return false;
+        if (emptySpaceExists(b)) {
+            return true;
+        }
+        else{
+            int i, j;
+            for (i = 0; i < b.size(); i++) {
+                for (j = 0; j < b.size() - 1; j++) {
+                    if (b.tile(i, j).value() == b.tile(i, j + 1).value()) {
+                        return true;
+                    }
+                }
+            }
+            for (i = 0; i < b.size() - 1; i++) {
+                for (j = 0; j < b.size(); j++) {
+                    if (b.tile(i, j).value() == b.tile(i + 1, j).value()) {
+                        return true;
+                    }
+                }
+            }
+        }
+    return false;
     }
+
+
+
 
 
     @Override
