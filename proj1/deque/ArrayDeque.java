@@ -8,10 +8,8 @@ public class ArrayDeque<Item> {
     private int size;
 
     public ArrayDeque() {
-        items = (Item[]) new Object[8];
-        positions[0] = 7;
-        positions[1] = 1;
         size = 0;
+        items = (Item[]) new Object[8];
     }
 
     public ArrayDeque(Item i) {
@@ -31,15 +29,28 @@ public class ArrayDeque<Item> {
     }
 
     public void addFirst(Item i){
+        if (size == 0){
+            items[0] = i;
+            positions[0] = 7;
+            positions[1] = 1;
+            size++;
+        }
         if (size == items.length){
             resize(size * 2);
         }
         items[positions[0]] = i;
         positions[0] = positions[0] - 1;
         size++;
+
     }
 
     public void addLast(Item i){
+        if (size == 0){
+            items[7] = i;
+            positions[0] = 6;
+            positions[1] = 0;
+            size++;
+        }
         if (size == items.length){
             resize(size * 2);
         }
@@ -48,29 +59,60 @@ public class ArrayDeque<Item> {
         size++;
     }
 
-    public void removeFirst(){
-        if (size <= items.length / 4){
-            resize(size / 2);
+    public Item removeFirst(){
+        if (isEmpty()){
+            return null;
         }
-        items[positions[0] + 1] = null;
-        positions[0] = positions[0] + 1;
+        if (size <= items.length / 4 && size > 8){
+            resize(items.length / 2);
+        }
+        int p = positions[0] + 1;
+        if (p == items.length){
+            p -= items.length;
+        }
+        Item i = items[p];
+        items[p] = null;
+        positions[0] = p;
         size--;
+        return i;
     }
 
-    public void removeLast(){
-        if (size <= items.length / 4){
-            resize(size / 2);
+    public Item removeLast(){
+        if (isEmpty()){
+            return null;
         }
-        items[positions[1] - 1] = null;
-        positions[1] = positions[1] - 1;
+        if (size <= items.length / 4 && size > 8){
+            resize(items.length / 2);
+        }
+        int p = positions[1] - 1;
+        if (positions[1] == 0){
+            p += items.length;
+        }
+        Item i = items[p];
+        items[p] = null;
+        positions[1] = p;
         size--;
+        return i;
     }
 
     public Item get(int i){
         return items[i];
-    } // buggy
+    } // buggy？
 
     public int size(){
         return size;
+    }
+    public boolean isEmpty(){
+        return size == 0;
+    }
+
+    public static void main(String[] args) {
+        ArrayDeque a = new ArrayDeque(2);
+        a.addFirst(1);
+        a.addFirst(1);
+        a.addFirst(1);
+        a.addFirst(1);
+        a.removeLast();
+        System.out.println(a.get(0));
     }
 }
