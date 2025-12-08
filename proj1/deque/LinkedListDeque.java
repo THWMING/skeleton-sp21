@@ -1,12 +1,12 @@
 package deque;
 
-public class LinkedListDeque<Sort> {
+public class LinkedListDeque<T> implements Deque<T> {
     private class DequeNode {
-        public Sort item;
+        public T item;
         public DequeNode prev;
         public DequeNode next;
 
-        public DequeNode(DequeNode p, Sort i, DequeNode n) {
+        public DequeNode(DequeNode p, T i, DequeNode n) {
             prev = p;
             item = i;
             next = n;
@@ -21,14 +21,15 @@ public class LinkedListDeque<Sort> {
         size = 0;
     }
 
-    public LinkedListDeque(Sort i) {
-        sentinel = new DequeNode(sentinel, null, sentinel);
+    public LinkedListDeque(T i) {
+        sentinel = new DequeNode(null, null, null);
         sentinel.next = new DequeNode(sentinel, i, sentinel);
         sentinel.prev = sentinel.next;
         size = 1;
     }
 
-    public void addFirst(Sort i) {
+    @Override
+    public void addFirst(T i) {
         if (size == 0) {
             sentinel.next = new DequeNode(sentinel, i, sentinel);
             sentinel.prev = sentinel.next;
@@ -42,7 +43,8 @@ public class LinkedListDeque<Sort> {
         }
     }
 
-    public void addLast(Sort i) {
+    @Override
+    public void addLast(T i) {
         if (size == 0) {
             sentinel.prev = new DequeNode(sentinel, i, sentinel);
             sentinel.next = sentinel.prev;
@@ -56,10 +58,7 @@ public class LinkedListDeque<Sort> {
         }
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
+    @Override
     public int size() {
         return size;
     }
@@ -73,39 +72,43 @@ public class LinkedListDeque<Sort> {
         System.out.println();
     }
 
-    public Sort removeFirst() {
+    @Override
+    public T removeFirst() {
         if (isEmpty()) {
             return null;
         }
-        Sort s = sentinel.next.item;
+        T s = sentinel.next.item;
         sentinel.next = sentinel.next.next;
         sentinel.next.prev = sentinel;
         size--;
         return s;
     }
 
-    public Sort removeLast() {
+    @Override
+    public T removeLast() {
         if (isEmpty()) {
             return null;
         }
-        Sort s = sentinel.prev.item;
+        T s = sentinel.prev.item;
         sentinel.prev = sentinel.prev.prev;
         sentinel.prev.next = sentinel;
         size--;
         return s;
     }
 
-    public Sort get(int index) {
+    @Override
+    public T get(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
+        DequeNode curr = sentinel;
         for (int i = 0; i < index + 1; i++) {
-            sentinel = sentinel.next;
+            curr = curr.next;
         }
-        return sentinel.item;
+        return curr.item;
     }
 
-    public Sort getRecursive(int index) {
+    public T getRecursive(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
@@ -132,11 +135,9 @@ public class LinkedListDeque<Sort> {
     }
 
     public static void main(String[] args) {
-        LinkedListDeque<Integer> L = new LinkedListDeque<>();
-        L.addLast(1); // 创建第三个节点后， 第二个节点的 next 指向了第一个
-        L.addLast(2);
-        L.addLast(3);
-        L.removeLast();
+        LinkedListDeque<Integer> L = new LinkedListDeque<>(1);
+        L.addFirst(2); // 创建第三个节点后， 第二个节点的 next 指向了第一个
+        L.removeFirst();
         L.removeLast();
     }
 }
